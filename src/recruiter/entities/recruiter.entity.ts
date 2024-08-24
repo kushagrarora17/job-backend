@@ -2,11 +2,14 @@ import {
   AllowNull,
   AutoIncrement,
   Column,
+  Model,
   PrimaryKey,
+  Table,
   Unique,
 } from 'sequelize-typescript';
 
-export class Recruiter {
+@Table
+export class Recruiter extends Model {
   @PrimaryKey
   @Unique
   @AutoIncrement

@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
 import { CreateRecruiterDto } from './dto/create-recruiter.dto';
 import { UpdateRecruiterDto } from './dto/update-recruiter.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Recruiter } from './entities/recruiter.entity';
 
 @Injectable()
 export class RecruiterService {
-  create(createRecruiterDto: CreateRecruiterDto) {
-    return 'This action adds a new recruiter';
+  constructor(
+    @InjectModel(Recruiter)
+    private readonly recruiterModel: typeof Recruiter,
+  ) {}
+
+  // Create a new Recruiter
+  async create(createRecruiterDto: CreateRecruiterDto): Promise<Recruiter> {
+    return await this.recruiterModel.create({ ...createRecruiterDto });
   }
 
-  findAll() {
-    return `This action returns all recruiter`;
+  // Get all Recruiters
+  async findAll(): Promise<Recruiter[]> {
+    return await this.recruiterModel.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} recruiter`;
+  // Get a single Recruiter by ID
+  async findOne(id: number): Promise<Recruiter> {
+    const recruiter = await this.recruiterModel.findByPk(id);
+    if (!recruiter) {
+      throw new NotFoundException(`Recruiter with ID ${id} not found`);
+    }
+    return recruiter;
   }
 
-  update(id: number, updateRecruiterDto: UpdateRecruiterDto) {
-    return `This action updates a #${id} recruiter`;
+  // Update a Recruiter by ID
+  async update(
+    id: number,
+    updateRecruiterDto: UpdateRecruiterDto,
+  ): Promise<Recruiter> {
+    const recruiter = await this.findOne(id);
+    await recruiter.update(updateRecruiterDto);
+    return recruiter;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recruiter`;
+  // Delete a Recruiter by ID
+  async remove(id: number): Promise<void> {
+    const recruiter = await this.findOne(id);
+    await recruiter.destroy();
   }
 }
