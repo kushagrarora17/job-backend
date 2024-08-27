@@ -2,9 +2,11 @@ import {
   AllowNull,
   AutoIncrement,
   BeforeValidate,
+  BelongsTo,
   Column,
   Default,
   ForeignKey,
+  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -42,6 +44,12 @@ export class Application extends Model {
   @AllowNull(false)
   @Column
   freelancerJobComposite: string;
+
+  @BelongsTo(() => Job)
+  job: Job;
+
+  @BelongsTo(() => Freelancer)
+  freelancer: Freelancer;
 
   // Use before validation hook to set the composite value
   @BeforeValidate

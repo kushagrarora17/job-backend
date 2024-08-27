@@ -2,11 +2,13 @@ import {
   AllowNull,
   AutoIncrement,
   Column,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
   Unique,
 } from 'sequelize-typescript';
+import { Job } from 'src/job/entities/job.entity';
 
 @Table
 export class Recruiter extends Model {
@@ -28,4 +30,7 @@ export class Recruiter extends Model {
   @AllowNull(false)
   @Column
   company: string;
+
+  @HasMany(() => Job)
+  jobs: Job[];
 }
