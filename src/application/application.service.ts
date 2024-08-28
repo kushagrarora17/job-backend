@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Application } from './entities/application.entity'; // Import the Application model
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
+import { Job } from 'src/job/entities/job.entity';
 
 @Injectable()
 export class ApplicationService {
@@ -50,5 +51,32 @@ export class ApplicationService {
   async remove(id: number): Promise<void> {
     const application = await this.findOne(id);
     await application.destroy();
+  }
+
+  async findAllForFreelancer(freelancerId: number): Promise<Application[]> {
+    return await this.applicationModel.findAll({
+      where: {
+        freelancerId,
+      },
+      include: [
+        {
+          model: Job,
+        },
+      ],
+    });
+  }
+
+  async findAllForRecruiter(recruiterId: number): Promise<Application[]> {
+    return await this.applicationModel.findAll({
+      include: [
+        {
+          model: Job,
+          required: true,
+          where: {
+            recruiterId,
+          },
+        },
+      ],
+    });
   }
 }
