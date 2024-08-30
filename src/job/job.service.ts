@@ -42,4 +42,13 @@ export class JobService {
     const job = await this.findOne(id);
     await job.destroy();
   }
+
+  // Get all Jobs created by a recruiter
+  async findAllByRecruiter(recruiterId: number): Promise<Job[]> {
+    return await this.jobModel.findAll({
+      where: {
+        recruiterId,
+      },
+    });
+  }
 }

@@ -38,7 +38,10 @@ export class Job extends Model {
   @Column
   recruiterId: number;
 
-  @HasMany(() => Application)
+  @HasMany(() => Application, {
+    onDelete: 'CASCADE',
+    onUpdate: 'RESTRICT',
+  })
   applications: Application[];
 
   @BelongsTo(() => Recruiter)
